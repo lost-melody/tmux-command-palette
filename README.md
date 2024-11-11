@@ -10,6 +10,11 @@
 
 ## Installation
 
+Requirements:
+
+- tmux >=3.3
+- fzf >=0.53.0
+
 ### TPM (Tmux Plugin Manager)
 
 - Install [tpm](https://github.com/tmux-plugins/tpm).
