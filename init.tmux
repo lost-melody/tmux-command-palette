@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 # vi: filetype=sh
 
+CACHE="${TMUX_TMPDIR:-/tmp}"
 CURRENT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTS="${CURRENT_DIR}/scripts"
 SHOW="${SCRIPTS}/show-prompt.sh"
@@ -25,16 +26,15 @@ bind_prompt() {
     key="$(tmux show-options -gqv "@cmdpalette-key-${table}")"
     if [ "${table}" = "root" ]; then
         bind="prefix"
-        if [ -z "${key}" ]; then
-            key="BSpace"
-        fi
+        key="${key:-BSpace}"
     else
         bind="${table}"
-        if [ -z "${key}" ]; then
-            key="?"
-        fi
+        key="${key:-"C-?"}"
     fi
-    tmux bind-key -T "${bind}" "${key}" run-shell "/usr/bin/env sh \"${SHOW}\" \"${table}\""
+    tmux bind-key \
+        -N "Command Palette" \
+        -T "${bind}" \
+        "${key}" run-shell "/usr/bin/env sh \"${SHOW}\" \"${table}\""
 }
 
 main "$@"
