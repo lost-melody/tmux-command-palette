@@ -29,7 +29,7 @@ bind_prompt() {
         key="${key:-BSpace}"
     else
         bind="${table}"
-        key="${key:-"C-?"}"
+        key="${key:-"?"}"
     fi
     tmux bind-key \
         -N "Command Palette" \
