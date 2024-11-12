@@ -13,7 +13,7 @@ main() {
     fi
 
     for table in $TABLES; do
-        bind_prompt "${table}"
+        bind_keytable "${table}"
     done
 }
 
@@ -26,18 +26,28 @@ all_tables() {
         sort -u
 }
 
-bind_prompt() {
+bind_keytable() {
     table="$1"
-    key="$(tmux show-options -gqv "@cmdpalette-key-${table}")"
+    bind="${table}"
+    key="?"
+
     if [ "${table}" = "root" ]; then
         bind="prefix"
-        key="${key:-BSpace}"
-    else
-        bind="${table}"
-        key="${key:-"?"}"
+        key="BSpace"
     fi
+
+    set -- $(tmux show-options -gqv "@cmdpalette-key-${table}")
+    if [ $# -eq 1 ]; then
+        # "BSpace"
+        key="$1"
+    elif [ $# -ge 2 ]; then
+        # "prefix BSpace"
+        bind="$1"
+        key="$2"
+    fi
+
     tmux bind-key \
-        -N "Command Palette" \
+        -N "Command Palette: ${table}" \
         -T "${bind}" \
         "${key}" run-shell "/usr/bin/env sh \"${SHOW}\" \"${table}\""
 }
