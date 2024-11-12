@@ -18,7 +18,12 @@ main() {
 }
 
 all_tables() {
-    tmux list-keys | sed 's/^bind-key \+\(-r\)\? \+-T \+\([^ ]\+\).*$/\2/' | sort -u
+    tmux list-keys |
+        sed -E \
+            -e 's/^bind-key\s+//' \
+            -e 's/^(-r\s+)?//' \
+            -e 's/^-T\s+(\S+).*$/\1/' |
+        sort -u
 }
 
 bind_prompt() {

@@ -13,14 +13,18 @@ list_keys() {
         tmux list-keys -NT "${table}"
         # list key bindings as valid config
         tmux list-keys -T "${table}" |
-            sed 's/^bind-key \+\(-r \+\)\?-T \+[^ ]\+ \+//'
-    fi
+            sed -E \
+                -e 's/^bind-key\s+//' \
+                -e 's/^(-r\s+)?//' \
+                -e 's/^-T\s+\S+\s+//'
+    fi |
+        sed -E -e 's/^\\?(\S+)\s+/\1\t/'
 }
 
 fuzzy_search() {
     # fuzzy search for a line and print the key
     fzf --tmux 70% |
-        sed 's/\([^ ]\+\).*$/\1/'
+        sed -E -e 's/^(\S+).*$/\1/'
 }
 
 execute_key() {
