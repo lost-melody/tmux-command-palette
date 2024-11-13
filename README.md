@@ -55,25 +55,6 @@ set -g @cmdpalette-key-root 'prefix BSpace'
 set -g @cmdpalette-key-copy-mode-vi 'copy-mode-vi C-/'
 ```
 
-### Extended Keybindings Table
-
-> Note: you probably want to use the Custom Command List below instead.
-
-We can bind commands to unicode characters, even if we don't actually have the key:
-
-```tmux
-# for example, we bind a tgpt popup window to a nerd symbol '', in custom table 'cmdpalette'
-bind-key -N 'tgpt chat window' -T cmdpalette '' popup -E -h 70% -w 70% "screen -r tgpt || screen -S tgpt tgpt -i"
-```
-
-Then we bind `prefix P` to command palette for table `cmdpalette`:
-
-```tmux
-set -g @cmdpalette-cmdpalette 'prefix P'
-```
-
-Now we can press `prefix` then `P` and choose our commands from the palette.
-
 ### Custom Command List
 
 Command list is a shell script that is sourced by the palette entry file, where we register a series of tmux commands.
@@ -89,18 +70,18 @@ Then register commands in the file:
 
 ```sh
 # commands.sh
-tmux_cmd --note '  tgpt chat window' --cmd 'popup -E -h 70% -w 70% "screen -r tgpt || screen -S tgpt tgpt -i"'
-tmux_cmd --cmd 'popup neofetch'
+popup="popup -h 80% -h 80%"
+tmux_cmd --icon ' ' --note 'tgpt chat window' \
+    --cmd "${popup} -E 'screen -R tgpt tgpt -i'"
+tmux_cmd --note 'lazygit for chezmoi' \
+    ---cmd "${popup} -E 'lazygit -p ~/.local/share/chezmoi'"
+tmux_cmd --cmd "${popup} neofetch"
 ```
 
 Where `tmux_cmd` is a shell function defined in the entry file:
 
-```sh
-# tmux_cmd [-c|--cmd str] [-d|-n|-N|--desc|--note str]
-tmux_cmd() {
-    opts="$(getopt -q -o c:d:n:N: -l cmd:,desc:,note: -- "$@")" || return 1
-    # ...
-}
+```txt
+tmux_cmd [-c|--cmd string] [-d|-n|-N|--desc|--note string] [-i|--icon string]
 ```
 
 Custom key binding for raising the command palette:
