@@ -8,7 +8,7 @@ KEYPALETTE="${SCRIPTS}/show-prompt.sh"
 CMDPALETTE="${SCRIPTS}/show-cmdlist.sh"
 
 main() {
-    TABLES="$(tmux show-options -gqv @cmdpalette-tables | sed 's/,/ /g')"
+    local TABLES="$(tmux show-options -gqv @cmdpalette-tables | sed 's/,/ /g')"
     if [ -z "${TABLES}" ]; then
         TABLES="$(all_tables)"
     fi
@@ -16,7 +16,7 @@ main() {
         bind_keytable "${table}"
     done
 
-    CMDLISTS="$(tmux show-options -gqv @cmdpalette-cmdlists | sed 's/,/ /g')"
+    local CMDLISTS="$(tmux show-options -gqv @cmdpalette-cmdlists | sed 's/,/ /g')"
     if [ -z "${CMDLISTS}" ]; then
         CMDLISTS="commands"
     fi
@@ -46,9 +46,9 @@ parse_binding() {
 }
 
 bind_keytable() {
-    table="$1"
-    bind="${table}"
-    key="?"
+    local table="$1"
+    local bind="${table}"
+    local key="?"
 
     if [ "${table}" = "root" ]; then
         bind="prefix"
@@ -64,9 +64,9 @@ bind_keytable() {
 }
 
 bind_cmdlist() {
-    list="$1"
-    bind="prefix"
-    key="M-m"
+    local list="$1"
+    local bind="prefix"
+    local key="M-m"
 
     parse_binding $(tmux show-options -gqv "@cmdpalette-cmd-${list}")
 

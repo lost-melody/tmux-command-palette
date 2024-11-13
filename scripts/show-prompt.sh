@@ -1,13 +1,13 @@
 #!/usr/bin/env sh
 
 main() {
-    table="$1"
-    key="$(list_keys "${table}" | fuzzy_search)"
+    local table="$1"
+    local key="$(list_keys "${table}" | fuzzy_search)"
     execute_key "${table}" "${key}"
 }
 
 list_keys() {
-    table="$1"
+    local table="$1"
     if [ -n "${table}" ]; then
         # list key bindings with notes
         tmux list-keys -NT "${table}"
@@ -23,13 +23,13 @@ list_keys() {
 
 fuzzy_search() {
     # fuzzy search for a line and print the key
-    fzf --tmux 70% |
+    fzf --tmux 80% |
         sed -E -e 's/^(\S+).*$/\1/'
 }
 
 execute_key() {
-    table="$1"
-    key="$2"
+    local table="$1"
+    local key="$2"
     if [ -n "${key}" ]; then
         tmux switch-client -T "${table}"
         tmux send-keys -K "${key}"
