@@ -2,7 +2,7 @@
 
 main() {
     local table="$1"
-    local key="$(list_keys "${table}" | fuzzy_search)"
+    local key="$(list_keys "${table}" | fuzzy_search "${table}")"
     execute_key "${table}" "${key}"
 }
 
@@ -22,9 +22,13 @@ list_keys() {
 }
 
 fuzzy_search() {
+    local table="$1"
+    local prevsed="s/^(\S+)\s+/[${table} \"\1\"]\n\n/"
     # fuzzy search for a line and print the key
-    fzf --tmux 80% |
-        sed -E -e 's/^(\S+).*$/\1/'
+    fzf --tmux 80% \
+        --preview "echo {} | sed -E '${prevsed}'" \
+        --preview-window wrap |
+        sed -E 's/^(\S+).*$/\1/'
 }
 
 execute_key() {

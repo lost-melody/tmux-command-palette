@@ -9,7 +9,7 @@ main() {
     local list="${1:-commands}"
     local listfile="${COMMANDSDIR}/${list}.sh"
     if [ -f "${listfile}" ]; then
-        local command="$(list_commands "${listfile}" | fuzzy_search)"
+        local command="$(list_commands "${listfile}" | fuzzy_search "${list}")"
         if [ -n "${command}" ]; then
             eval tmux "${command}"
         fi
@@ -61,8 +61,12 @@ list_commands() {
 }
 
 fuzzy_search() {
+    local list="$1"
+    local prevsed="s/^(.*)${SEP}(.*)$/[cmdlist \"${list}\"]\n\n\2\n\n\1/"
     # fuzzy search for a line and print the key
-    fzf --tmux 80% -d "${SEP}" --with-nth 2 |
+    fzf --tmux 80% -d "${SEP}" --with-nth 2 \
+        --preview "echo {} | sed -E '${prevsed}'" \
+        --preview-window wrap |
         sed -E -e "s/^(.*)${SEP}.*$/\1/"
 }
 
