@@ -1,73 +1,47 @@
 #!/usr/bin/env sh
 
+cd "$(dirname "$0")"
+
 CONFIG="${XDG_CONFIG_HOME:-"${HOME}/.config"}"
-COMMANDSDIR="${CONFIG}/tmux-command-palette"
+CACHE="${TMUX_TMPDIR:-/tmp}"
+CACHEDIR="${CACHE}/tmux-command-palette"
+PREVIEW="preview-cmd.sh"
+CACHECMD="cache-cmdlist.sh"
+
 TAB="$(echo -e "\t")"
 SEP="$(echo -e "\tCMD:PLT\t")"
 
 main() {
     local list="${1:-commands}"
-    local listfile="${COMMANDSDIR}/${list}.sh"
-    if [ -f "${listfile}" ]; then
-        local command="$(list_commands "${listfile}" | fuzzy_search "${list}")"
-        if [ -n "${command}" ]; then
-            eval tmux "${command}"
-        fi
-    else
-        tmux display-message "command list file not found: ${listfile}"
-    fi
-}
+    sh "${CACHECMD}" "${list}" || exit
 
-tmux_cmd() {
-    local opts="$(getopt -q -o c:d:i:n:N: -l cmd:,desc:,icon:,note: -- "$@")" || return 1
-    eval set -- "${opts}"
-    local cmd=""
-    local icon=""
-    local note=""
-
-    while true; do
-        case "$1" in
-        -c | --cmd)
-            cmd="$2"
-            shift 2
-            ;;
-        -d | -n | -N | --desc | --note)
-            note="$2"
-            shift 2
-            ;;
-        -i | --icon)
-            icon="$2"
-            shift 2
-            ;;
-        --)
-            shift
-            break
-            ;;
-        *)
-            return 1
-            ;;
-        esac
-    done
-
-    if [ -n "${cmd}" ]; then
-        echo "${cmd}${SEP}${icon:-">_"}${TAB}${note:-"${cmd}"}"
+    local command="$(list_commands "${list}" | fuzzy_search "${list}")"
+    if [ -n "${command}" ]; then
+        eval tmux "${command}"
     fi
 }
 
 list_commands() {
-    local listfile="$1"
-    source "${listfile}" ||
-        tmux display-message "failed to execute command list file: ${listfile}"
+    local list="$1"
+    local cachefile="${CACHEDIR}/${list}.txt"
+    grep "^  NOTE:" "${cachefile}" | sed -E "s/^\s+NOTE(:[0-9]+:)\s+/\1${SEP}/"
 }
 
 fuzzy_search() {
     local list="$1"
-    local prevsed="s/^(.*)${SEP}(.*)$/[cmdlist \"${list}\"]\n\n\2\n\n\1/"
+
     # fuzzy search for a line and print the key
-    fzf --tmux 80% -d "${SEP}" --with-nth 2 \
-        --preview "echo {} | sed -E '${prevsed}'" \
-        --preview-window wrap |
-        sed -E -e "s/^(.*)${SEP}.*$/\1/"
+    local cmd_id="$(
+        fzf --tmux 80% -d "${SEP}" --with-nth 2 \
+            --preview "echo {} | sh ${PREVIEW} ${list}" \
+            --preview-window wrap |
+            sed -E "s/^(:[0-9]+:)\s+.*$/\1/"
+    )"
+
+    # query that command from the command cache
+    local cachefile="${CACHEDIR}/${list}.txt"
+    grep "^  BIND${cmd_id}" "${cachefile}" |
+        sed -E "s/^\s+BIND:[0-9]+:\s+//"
 }
 
 main "$@"

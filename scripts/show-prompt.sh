@@ -1,5 +1,10 @@
 #!/usr/bin/env sh
 
+cd "$(dirname "$0")"
+
+PREVIEW="preview-key.sh"
+SEDKEYBIND="sed-keybind.sh"
+
 main() {
     local table="$1"
     local key="$(list_keys "${table}" | fuzzy_search "${table}")"
@@ -10,25 +15,22 @@ list_keys() {
     local table="$1"
     if [ -n "${table}" ]; then
         # list key bindings with notes
-        tmux list-keys -NT "${table}"
+        tmux list-keys -NT "${table}" |
+            sed -E 's/^(\S+)\s+/\1\t/'
         # list key bindings as valid config
         tmux list-keys -T "${table}" |
-            sed -E \
-                -e 's/^bind-key\s+//' \
-                -e 's/^(-r\s+)?//' \
-                -e 's/^-T\s+\S+\s+//'
-    fi |
-        sed -E -e 's/^\\?(\S+)\s+/\1\t/'
+            sh "${SEDKEYBIND}" |
+            sed -E 's/^(\S+)\s+(\S+)\s+(.*)$/\2\t\3/'
+    fi
 }
 
 fuzzy_search() {
     local table="$1"
-    local prevsed="s/^(\S+)\s+/[${table} \"\1\"]\n\n/"
     # fuzzy search for a line and print the key
     fzf --tmux 80% \
-        --preview "echo {} | sed -E '${prevsed}'" \
+        --preview "echo {} | sh ${PREVIEW} ${table}" \
         --preview-window wrap |
-        sed -E 's/^(\S+).*$/\1/'
+        sed -E 's/^(\S+)\s+.*$/\1/'
 }
 
 execute_key() {

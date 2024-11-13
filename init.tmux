@@ -2,12 +2,16 @@
 # vi: filetype=sh
 
 CACHE="${TMUX_TMPDIR:-/tmp}"
+CACHEDIR="${CACHE}/tmux-command-palette"
 CURRENT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTS="${CURRENT_DIR}/scripts"
+SEDKEYBIND="${SCRIPTS}/sed-keybind.sh"
 KEYPALETTE="${SCRIPTS}/show-prompt.sh"
 CMDPALETTE="${SCRIPTS}/show-cmdlist.sh"
 
 main() {
+    rm -rf "${CACHEDIR}"
+
     local TABLES="$(tmux show-options -gqv @cmdpalette-tables | sed 's/,/ /g')"
     if [ -z "${TABLES}" ]; then
         TABLES="$(all_tables)"
@@ -27,10 +31,8 @@ main() {
 
 all_tables() {
     tmux list-keys |
-        sed -E \
-            -e 's/^bind-key\s+//' \
-            -e 's/^(-r\s+)?//' \
-            -e 's/^-T\s+(\S+).*$/\1/' |
+        sh "${SEDKEYBIND}" |
+        sed -E 's/^(\S+)\s+(\S+)\s+(.*)$/\1/' |
         sort -u
 }
 
