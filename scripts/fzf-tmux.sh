@@ -1,9 +1,8 @@
 #!/usr/bin/env sh
 
-CACHE="${TMUX_TMPDIR:-/tmp}"
-CACHEDIR="${CACHE}/tmux-command-palette"
-
 main() {
+    source "./env.sh" --
+
     local args="$(mktemp "${CACHEDIR}/XXX.txt")"
     local input="$(mktemp "${CACHEDIR}/XXX.txt")"
     local output="$(mktemp "${CACHEDIR}/XXX.txt")"

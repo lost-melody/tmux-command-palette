@@ -2,9 +2,6 @@
 
 cd "$(dirname "$0")"
 
-CONFIG="${XDG_CONFIG_HOME:-"${HOME}/.config"}"
-CACHE="${TMUX_TMPDIR:-/tmp}"
-CACHEDIR="${CACHE}/tmux-command-palette"
 FZFTMUX="fzf-tmux.sh"
 PREVIEW="preview-cmd.sh"
 CACHECMD="cache-cmdlist.sh"
@@ -13,7 +10,7 @@ TAB="$(echo -e "\t")"
 SEP="$(echo -e "\tCMD:PLT\t")"
 
 main() {
-    mkdir -p "${CACHEDIR}"
+    source "./env.sh" --
 
     local list="${1:-commands}"
     sh "${CACHECMD}" "${list}" || return

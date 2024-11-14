@@ -2,14 +2,12 @@
 
 cd "$(dirname "$0")"
 
-CACHE="${TMUX_TMPDIR:-/tmp}"
-CACHEDIR="${CACHE}/tmux-command-palette"
 FZFTMUX="fzf-tmux.sh"
 PREVIEW="preview-key.sh"
 SEDKEYBIND="sed-keybind.sh"
 
 main() {
-    mkdir -p "${CACHEDIR}"
+    source "./env.sh" --
 
     local table="$1"
 

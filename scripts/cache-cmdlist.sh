@@ -2,14 +2,14 @@
 
 cd "$(dirname "$0")"
 
-CONFIG="${XDG_CONFIG_HOME:-"${HOME}/.config"}"
-CMDSDIR="${CONFIG}/tmux-command-palette"
 CACHE="${TMUX_TMPDIR:-/tmp}"
 CACHEDIR="${CACHE}/tmux-command-palette"
 
 TAB="$(echo -e "\t")"
 
 main() {
+    source "./env.sh" --
+
     local list="$1"
     local cmdfile="${CMDSDIR}/${list}.sh"
     if [ ! -f "${cmdfile}" ]; then

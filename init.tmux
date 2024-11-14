@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 # vi: filetype=sh
 
-CACHE="${TMUX_TMPDIR:-/tmp}"
-CACHEDIR="${CACHE}/tmux-command-palette"
 CURRENT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTS="${CURRENT_DIR}/scripts"
 SEDKEYBIND="${SCRIPTS}/sed-keybind.sh"
@@ -10,7 +8,7 @@ KEYPALETTE="${SCRIPTS}/show-prompt.sh"
 CMDPALETTE="${SCRIPTS}/show-cmdlist.sh"
 
 main() {
-    rm -rf "${CACHEDIR}"
+    source "${SCRIPTS}/env.sh" -c --
 
     local TABLES="$(tmux show-options -gqv @cmdpalette-tables | sed 's/,/ /g')"
     if [ -z "${TABLES}" ]; then

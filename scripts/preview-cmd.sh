@@ -2,12 +2,11 @@
 
 cd "$(dirname "$0")"
 
-CACHE="${TMUX_TMPDIR:-/tmp}"
-CACHEDIR="${CACHE}/tmux-command-palette"
-
 TAB="$(echo -e "\t")"
 
 main() {
+    source "./env.sh" --
+
     local list="$1"
     local cachefile="${CACHEDIR}/${list}.txt"
     local cmd_id="$(sed -E "s/^(:[0-9]+:)\s+.*$/\1/")"
