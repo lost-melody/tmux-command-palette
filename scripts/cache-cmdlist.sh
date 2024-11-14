@@ -14,17 +14,16 @@ main() {
     local cmdfile="${CMDSDIR}/${list}.sh"
     if [ ! -f "${cmdfile}" ]; then
         tmux display-message "command list file not found: ${cmdfile}"
-        exit 1
+        return 1
     fi
 
-    mkdir -p "${CACHEDIR}"
     local cachefile="${CACHEDIR}/${list}.txt"
     if [ ! -f "${cachefile}" -o "${cmdfile}" -nt "${cachefile}" ]; then
         local CMD_ID=0
         source "${cmdfile}" >"${cachefile}" 2>/dev/null
         if [ "$?" -ne 0 ]; then
             tmux display-message "failed to source command list file: ${cmdfile}"
-            exit 1
+            return 1
         fi
     fi
 }

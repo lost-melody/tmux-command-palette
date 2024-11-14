@@ -2,13 +2,19 @@
 
 cd "$(dirname "$0")"
 
+FZFTMUX="fzf-tmux.sh"
 PREVIEW="preview-key.sh"
 SEDKEYBIND="sed-keybind.sh"
 
 main() {
+    mkdir -p "${CACHEDIR}"
+
     local table="$1"
+
     local key="$(list_keys "${table}" | fuzzy_search "${table}")"
     execute_key "${table}" "${key}"
+
+    return 0
 }
 
 list_keys() {
@@ -27,7 +33,7 @@ list_keys() {
 fuzzy_search() {
     local table="$1"
     # fuzzy search for a line and print the key
-    fzf --tmux 80% \
+    sh "${FZFTMUX}" \
         --preview "echo {} | sh ${PREVIEW} ${table}" \
         --preview-window wrap |
         sed -E 's/^(\S+)\s+.*$/\1/'

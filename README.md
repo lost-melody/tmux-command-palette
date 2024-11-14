@@ -14,7 +14,7 @@ _Tmux Command Palette_ is actually _Keybinding Palette_ despite its name.
 Requirements:
 
 - [tmux](https://github.com/tmux/tmux) `>=3.3`
-- [fzf](https://github.com/junegunn/fzf) `>=0.53.0`
+- [fzf](https://github.com/junegunn/fzf) `>=0.24.0`
 
 ### TPM (Tmux Plugin Manager)
 

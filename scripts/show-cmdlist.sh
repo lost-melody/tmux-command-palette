@@ -5,6 +5,7 @@ cd "$(dirname "$0")"
 CONFIG="${XDG_CONFIG_HOME:-"${HOME}/.config"}"
 CACHE="${TMUX_TMPDIR:-/tmp}"
 CACHEDIR="${CACHE}/tmux-command-palette"
+FZFTMUX="fzf-tmux.sh"
 PREVIEW="preview-cmd.sh"
 CACHECMD="cache-cmdlist.sh"
 
@@ -12,13 +13,17 @@ TAB="$(echo -e "\t")"
 SEP="$(echo -e "\tCMD:PLT\t")"
 
 main() {
+    mkdir -p "${CACHEDIR}"
+
     local list="${1:-commands}"
-    sh "${CACHECMD}" "${list}" || exit
+    sh "${CACHECMD}" "${list}" || return
 
     local command="$(list_commands "${list}" | fuzzy_search "${list}")"
     if [ -n "${command}" ]; then
         eval tmux "${command}"
     fi
+
+    return 0
 }
 
 list_commands() {
@@ -32,7 +37,8 @@ fuzzy_search() {
 
     # fuzzy search for a line and print the key
     local cmd_id="$(
-        fzf --tmux 80% -d "${SEP}" --with-nth 2 \
+        sh "${FZFTMUX}" \
+            -d "${SEP}" --with-nth 2 \
             --preview "echo {} | sh ${PREVIEW} ${list}" \
             --preview-window wrap |
             sed -E "s/^(:[0-9]+:)\s+.*$/\1/"
