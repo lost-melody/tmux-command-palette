@@ -44,10 +44,12 @@ fuzzy_search() {
             sed -E "s/^(:[0-9]+:)\s+.*$/\1/"
     )"
 
-    # query that command from the command cache
-    local cachefile="${CACHEDIR}/${list}.txt"
-    grep "^  BIND${cmd_id}" "${cachefile}" |
-        sed -E "s/^\s+BIND:[0-9]+:\s+//"
+    if [ -n "${cmd_id}" ]; then
+        # query that command from the command cache
+        local cachefile="${CACHEDIR}/${list}.txt"
+        grep "^  BIND${cmd_id}" "${cachefile}" |
+            sed -E "s/^\s+BIND:[0-9]+:\s+//"
+    fi
 }
 
 main "$@"
