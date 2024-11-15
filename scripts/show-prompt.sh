@@ -47,8 +47,17 @@ execute_key() {
     local table="$1"
     local key="$2"
     if [ -n "${key}" ]; then
-        tmux switch-client -T "${table}"
-        tmux send-keys -K "${key}"
+        if [ "${key}" = ";" ]; then
+            key="\\${key}"
+        fi
+        local command="$(
+            tmux list-keys -T "${table}" "${key}" |
+                sh "${SEDKEYBIND}" |
+                sed -E 's/^\S+\s+\S+\s+//'
+        )"
+        if [ -n "${command}" ]; then
+            eval tmux ${command}
+        fi
     fi
 }
 
