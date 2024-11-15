@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 TAB="$(echo -e "\t")"
 
 main() {
-    source "./env.sh" --
+    source_file "./env.sh"
 
     local list="$1"
     local cachefile="${CACHEDIR}/${list}.txt"
@@ -34,6 +34,10 @@ main() {
     echo "${cmd}"
 
     rm -rf "${cmddef}"
+}
+
+source_file() {
+    . "$@"
 }
 
 main "$@"

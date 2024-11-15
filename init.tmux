@@ -8,7 +8,7 @@ KEYPALETTE="${SCRIPTS}/show-prompt.sh"
 CMDPALETTE="${SCRIPTS}/show-cmdlist.sh"
 
 main() {
-    source "${SCRIPTS}/env.sh" -c --
+    source_file "${SCRIPTS}/env.sh" -c
 
     local TABLES="$(tmux show-options -gqv @cmdpalette-tables | sed 's/,/ /g')"
     if [ -z "${TABLES}" ]; then
@@ -25,6 +25,10 @@ main() {
     for list in $CMDLISTS; do
         bind_cmdlist "${list}"
     done
+}
+
+source_file() {
+    . "$@"
 }
 
 all_tables() {

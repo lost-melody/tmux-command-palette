@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 main() {
-    source "./env.sh" --
+    source_file "./env.sh"
 
     local args="$(mktemp "${CACHEDIR}/XXX.txt")"
     local input="$(mktemp "${CACHEDIR}/XXX.txt")"
@@ -21,6 +21,10 @@ main() {
     cat "${output}"
 
     rm "${args}" "${input}" "${output}"
+}
+
+source_file() {
+    . "$@"
 }
 
 parse_opts() {

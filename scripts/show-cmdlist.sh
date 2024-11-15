@@ -10,7 +10,7 @@ TAB="$(echo -e "\t")"
 SEP="$(echo -e "\tCMD:PLT\t")"
 
 main() {
-    source "./env.sh" --
+    source_file "./env.sh"
 
     local list="${1:-commands}"
     sh "${CACHECMD}" "${list}" || return
@@ -21,6 +21,10 @@ main() {
     fi
 
     return 0
+}
+
+source_file() {
+    . "$@"
 }
 
 list_commands() {

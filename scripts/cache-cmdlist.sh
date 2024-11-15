@@ -8,7 +8,7 @@ CACHEDIR="${CACHE}/tmux-command-palette"
 TAB="$(echo -e "\t")"
 
 main() {
-    source "./env.sh" --
+    source_file "./env.sh"
 
     local list="$1"
     local cmdfile="${CMDSDIR}/${list}.sh"
@@ -20,12 +20,16 @@ main() {
     local cachefile="${CACHEDIR}/${list}.txt"
     if [ ! -f "${cachefile}" -o "${cmdfile}" -nt "${cachefile}" ]; then
         local CMD_ID=0
-        source "${cmdfile}" >"${cachefile}" 2>/dev/null
+        source_file "${cmdfile}" >"${cachefile}" 2>/dev/null
         if [ "$?" -ne 0 ]; then
             tmux display-message "failed to source command list file: ${cmdfile}"
             return 1
         fi
     fi
+}
+
+source_file() {
+    . "$@"
 }
 
 tmux_cmd() {

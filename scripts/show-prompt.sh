@@ -7,7 +7,7 @@ PREVIEW="preview-key.sh"
 SEDKEYBIND="sed-keybind.sh"
 
 main() {
-    source "./env.sh" --
+    source_file "./env.sh"
 
     local table="$1"
 
@@ -15,6 +15,10 @@ main() {
     execute_key "${table}" "${key}"
 
     return 0
+}
+
+source_file() {
+    . "$@"
 }
 
 list_keys() {
