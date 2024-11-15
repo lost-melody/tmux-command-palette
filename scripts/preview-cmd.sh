@@ -2,8 +2,6 @@
 
 cd "$(dirname "$0")"
 
-TAB="$(printf "\t")"
-
 main() {
     source_file "./env.sh"
 

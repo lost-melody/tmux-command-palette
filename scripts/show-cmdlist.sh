@@ -6,9 +6,6 @@ FZFTMUX="fzf-tmux.sh"
 PREVIEW="preview-cmd.sh"
 CACHECMD="cache-cmdlist.sh"
 
-TAB="$(printf "\t")"
-SEP="$(printf "\tCMD:PLT\t")"
-
 main() {
     source_file "./env.sh"
 
