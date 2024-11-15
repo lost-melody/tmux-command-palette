@@ -39,6 +39,13 @@ __set_env() {
         local tmpdir="${TMUX_TMPDIR:-"${TMPDIR:-/tmp}"}"
         CACHEDIR="${tmpdir}/tmux-command-palette"
     fi
+
+    if [ -z "${TAB}" ]; then
+        TAB="$(printf "\t")"
+    fi
+    if [ -z "${SEP}" ]; then
+        SEP="$(printf "\tCMD:PLT\t")"
+    fi
 }
 
 __make_dirs() {

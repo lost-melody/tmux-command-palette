@@ -16,7 +16,7 @@ main() {
     fi
 
     tmux popup -h 80% -w 80% -E \
-        "cd '${PWD}' && cat '${input}' | eval fzf \$(cat ${args}) >'${output}'"
+        "cd '${PWD}' && cat '${input}' | eval fzf \"\$(cat ${args})\" >'${output}'"
 
     cat "${output}"
 
