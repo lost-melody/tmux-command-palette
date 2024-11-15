@@ -91,7 +91,7 @@ popup="popup -h 80% -h 80%"
 tmux_cmd --icon ' ' --note 'tgpt chat window' \
     --cmd "${popup} -E 'screen -R tgpt tgpt -i'"
 tmux_cmd --note 'lazygit for chezmoi' \
-    ---cmd "${popup} -E 'lazygit -p ~/.local/share/chezmoi'"
+    --cmd "${popup} -E 'lazygit -p ~/.local/share/chezmoi'"
 tmux_cmd --cmd "${popup} neofetch"
 ```
 
