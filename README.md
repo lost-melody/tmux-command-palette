@@ -9,6 +9,23 @@ _Tmux Command Palette_ is actually _Keybinding Palette_ despite its name.
 - Pressing `?` in `copy-mode` shows the palette for key table _copy-mode_.
 - Pressing `prefix` then `P` shows the palette for a custom command list.
 
+## Screenshots
+
+<details>
+<summary>Keybinding Palette</summary>
+
+![tmux-cmdpalette01.png](https://i.postimg.cc/TPVRms29/tmux-cmdpalette01.png)
+![tmux-cmdpalette02.png](https://i.postimg.cc/mZXTQC40/tmux-cmdpalette02.png)
+
+</details>
+
+<details>
+<summary>Command Palette</summary>
+
+![tmux-cmdpalette03.png](https://i.postimg.cc/7YjDR4f9/tmux-cmdpalette03.png)
+
+</details>
+
 ## Installation
 
 Requirements:
