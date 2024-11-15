@@ -8,8 +8,13 @@ main() {
     local list="$1"
     local cmdfile="${CMDSDIR}/${list}.sh"
     if [ ! -f "${cmdfile}" ]; then
-        tmux display-message "command list file not found: ${cmdfile}"
-        return 1
+        if [ "${list}" = "commands" ]; then
+            # copy default cmdfile template
+            cp "commands.sh.example" "${cmdfile}"
+        else
+            tmux display-message "command list file not found: ${cmdfile}"
+            return 1
+        fi
     fi
 
     local cachefile="${CACHEDIR}/${list}.txt"

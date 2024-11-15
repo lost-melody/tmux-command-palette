@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# vi: filetype=sh
+
+main() {
+    local popup="display-popup -h 80% -w 80%"
+    local scripts="${PWD}"
+    local plugins="$(dirname "$(dirname "${scripts}")")"
+
+    local sed_env="s/^([^=]+)=/\1\t/"
+    tmux_cmd --icon "󰺮 " --note "Browse environment variables" \
+        --cmd "${popup} -E \"env | sed -E '${sed_env}' | fzf\""
+    local editor="${EDITOR:-"vim"}"
+    tmux_cmd --icon "󰤌 " --note "Edit this list of commands" \
+        --cmd "${popup} -E \"${editor} '${cmdfile}'\""
+}
+
+main "$@"
