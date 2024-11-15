@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 CACHE="${TMUX_TMPDIR:-/tmp}"
 CACHEDIR="${CACHE}/tmux-command-palette"
 
-TAB="$(echo -e "\t")"
+TAB="$(printf "\t")"
 
 main() {
     source_file "./env.sh"

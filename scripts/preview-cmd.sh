@@ -2,7 +2,7 @@
 
 cd "$(dirname "$0")"
 
-TAB="$(echo -e "\t")"
+TAB="$(printf "\t")"
 
 main() {
     source_file "./env.sh"
