@@ -87,18 +87,21 @@ Then register commands in the file:
 
 ```sh
 # commands.sh
-popup="popup -h 80% -h 80%"
-tmux_cmd --icon ' ' --note 'tgpt chat window' \
-    --cmd "${popup} -E 'screen -R tgpt tgpt -i'"
-tmux_cmd --note 'lazygit for chezmoi' \
-    --cmd "${popup} -E 'lazygit -p ~/.local/share/chezmoi'"
-tmux_cmd --cmd "${popup} neofetch"
+tmux_cmd --icon "󰑕 " --note "Rename session" -- \
+    command-prompt -p "session name:" "rename-session %1"
+shell_cmd --icon "󰈹 " --note "Launch firefox" -- \
+    firefox
+local editor="${EDITOR:-"vim"}"
+popup_cmd --icon "󰤌 " --note "Edit this list of commands" --flags "-E" -- \
+    ${editor} "${cmdfile}"
 ```
 
-Where `tmux_cmd` is a shell function defined in the entry file:
+With `tmux_cmd`, `shell_cmd`, `popup_cmd` defined in the entry file:
 
 ```txt
-tmux_cmd [-c|--cmd string] [-d|-n|-N|--desc|--note string] [-i|--icon string]
+tmux_cmd [--note string] [--icon string] -- [command]
+shell_cmd [--note string] [--icon string] -- [command]
+popup_cmd [--note string] [--icon string] -- [command]
 ```
 
 Custom key binding for raising the command palette:

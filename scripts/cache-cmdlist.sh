@@ -32,12 +32,9 @@ source_file() {
     . "$@"
 }
 
-tmux_cmd() {
-    local opts="$(getopt -q -o c:d:i:n:N: -l cmd:,desc:,icon:,note: -- "$@")" || return 1
+parse_cmdargs() {
+    local opts="$(getopt -q -o c:d:f:i:n:N: -l cmd:,desc:,flags:,icon:,note: -- "$@")" || return 1
     eval set -- "${opts}"
-    local cmd=""
-    local icon=""
-    local note=""
 
     while true; do
         case "$1" in
@@ -49,12 +46,22 @@ tmux_cmd() {
             note="$2"
             shift 2
             ;;
+        -f | --flags)
+            flags="$2"
+            shift 2
+            ;;
         -i | --icon)
             icon="$2"
             shift 2
             ;;
         --)
             shift
+            if [ -z "${cmd}" ]; then
+                # escape the cmd string
+                cmd="$(
+                    getopt -q -o "" -- -- "$@" | sed -E "s/^\s+--\s+//"
+                )"
+            fi
             break
             ;;
         *)
@@ -62,12 +69,46 @@ tmux_cmd() {
             ;;
         esac
     done
+}
+
+tmux_cmd() {
+    local cmd=""
+    local icon=""
+    local note=""
+    local flags=""
+    parse_cmdargs "$@" || return 1
 
     if [ -n "${cmd}" ]; then
         let CMD_ID++
         echo "COMMAND:${CMD_ID}:"
         echo "  NOTE:${CMD_ID}: ${icon:-">_"}${TAB}${note:-"${cmd}"}"
         echo "  BIND:${CMD_ID}: ${cmd}"
+    fi
+}
+
+popup_cmd() {
+    local cmd=""
+    local icon=""
+    local note=""
+    local flags=""
+    parse_cmdargs "$@" || return 1
+
+    if [ -n "${cmd}" ]; then
+        tmux_cmd --icon "${icon}" --note "${note}" -- \
+            display-popup -h 80% -w 80% ${flags} "${cmd}"
+    fi
+}
+
+shell_cmd() {
+    local cmd=""
+    local icon=""
+    local note=""
+    local flags=""
+    parse_cmdargs "$@" || return 1
+
+    if [ -n "${cmd}" ]; then
+        tmux_cmd --icon "${icon}" --note "${note}" -- \
+            run-shell ${flags} "${cmd}"
     fi
 }
 
