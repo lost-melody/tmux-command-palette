@@ -15,6 +15,8 @@ main() {
     local editor="${EDITOR:-"vim"}"
     popup_cmd --icon "󰤌 " --note "Edit this list of commands" --flags "-E" -- \
         ${editor} "${cmdfile}"
+    popup_cmd -- \
+        neofetch
 }
 
 main "$@"

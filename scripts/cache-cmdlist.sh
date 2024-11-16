@@ -81,7 +81,7 @@ tmux_cmd() {
     if [ -n "${cmd}" ]; then
         let CMD_ID++
         echo "COMMAND:${CMD_ID}:"
-        echo "  NOTE:${CMD_ID}: ${icon:-">_"}${TAB}${note:-"${cmd}"}"
+        echo "  NOTE:${CMD_ID}: ${icon:-">_"}${TAB}${note:-"$(eval echo "${cmd}")"}"
         echo "  BIND:${CMD_ID}: ${cmd}"
     fi
 }

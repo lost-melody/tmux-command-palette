@@ -29,7 +29,7 @@ main() {
     fi
     echo
     echo "[Command]"
-    echo "${cmd}"
+    eval echo "${cmd}"
 
     rm -rf "${cmddef}"
 }
