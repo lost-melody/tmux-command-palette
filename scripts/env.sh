@@ -40,6 +40,13 @@ __set_env() {
         CACHEDIR="${tmpdir}/tmux-command-palette"
     fi
 
+    local fzf_version="$(fzf --version | cut -d " " -f 1)"
+    if [ "${fzf_version}" = "0.53.0" -o "${fzf_version}" '>' "0.53.0" ]; then
+        FZFCMD="fzf --tmux 80%"
+    else
+        FZFCMD="sh fzf-tmux.sh"
+    fi
+
     if [ -z "${TAB}" ]; then
         TAB="$(printf "\t")"
     fi

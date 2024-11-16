@@ -2,7 +2,6 @@
 
 cd "$(dirname "$0")"
 
-FZFTMUX="fzf-tmux.sh"
 PREVIEW="preview-key.sh"
 SEDKEYBIND="sed-keybind.sh"
 
@@ -37,7 +36,7 @@ list_keys() {
 fuzzy_search() {
     local table="$1"
     # fuzzy search for a line and print the key
-    sh "${FZFTMUX}" \
+    ${FZFCMD} \
         --preview "echo {} | sh ${PREVIEW} ${table}" \
         --preview-window wrap |
         sed -E 's/^(\S+)\s+.*$/\1/'
@@ -50,6 +49,17 @@ execute_key() {
         if [ "${key}" = ";" ]; then
             key="\\${key}"
         fi
+
+        local tmux_version="$(tmux -V)"
+        if [ "${tmux_version}" = "3.4" -o "${tmux_version}" '>' "3.4" ]; then
+            # tmux (>=3.4) supports "send-keys -K"
+            tmux switch-client -T "${table}"
+            tmux send-keys -K "${key}"
+            return
+        fi
+
+        # tmux (<3.4) does not support "send-keys -K", execute commands instead
+        # note: some commands (e.g. new-session) will not work
         local command="$(
             tmux list-keys -T "${table}" "${key}" |
                 sh "${SEDKEYBIND}" |

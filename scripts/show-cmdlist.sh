@@ -2,7 +2,6 @@
 
 cd "$(dirname "$0")"
 
-FZFTMUX="fzf-tmux.sh"
 PREVIEW="preview-cmd.sh"
 CACHECMD="cache-cmdlist.sh"
 
@@ -35,7 +34,7 @@ fuzzy_search() {
 
     # fuzzy search for a line and print the key
     local cmd_id="$(
-        sh "${FZFTMUX}" \
+        ${FZFCMD} \
             -d "${SEP}" --with-nth 2 \
             --preview "echo {} | sh ${PREVIEW} ${list}" \
             --preview-window wrap |
