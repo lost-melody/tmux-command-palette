@@ -22,11 +22,9 @@ main() {
     local cmd="$(tail -n 1 "${cmddef}")"
 
     echo "[cmdlist \"${list}\"]"
-    if [ "${note}" != "${cmd}" ]; then
-        echo
-        echo "[Note]"
-        echo "${icon}${TAB}${note}"
-    fi
+    echo
+    echo "[Note]"
+    echo "${icon}${TAB}${note}"
     echo
     echo "[Command]"
     eval echo "${cmd}"
