@@ -7,7 +7,7 @@ _Tmux Command Palette_ is actually _Keybinding Palette_ despite its name.
 - Pressing `prefix` then `?` shows the palette for key table _prefix_.
 - Pressing `prefix` then `BSpace` shows the palette for key table _root_.
 - Pressing `?` in `copy-mode` shows the palette for key table _copy-mode_.
-- Pressing `prefix` then `P` shows the palette for a custom command list.
+- Pressing `prefix` then `M-m` shows the palette for a custom command list.
 
 ## Screenshots
 
