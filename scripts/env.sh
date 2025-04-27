@@ -37,7 +37,7 @@ __set_env() {
 
     if [ -z "${CACHEDIR}" ]; then
         local tmpdir="${TMUX_TMPDIR:-"${TMPDIR:-/tmp}"}"
-        CACHEDIR="${tmpdir}/tmux-command-palette"
+        CACHEDIR="${tmpdir}/tmux-command-palette-$(id -u)"
     fi
 
     local fzf_version="$(fzf --version | cut -d " " -f 1)"
