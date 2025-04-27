@@ -41,10 +41,12 @@ __set_env() {
     fi
 
     local fzf_version="$(fzf --version | cut -d " " -f 1)"
-    if [ "${fzf_version}" = "0.53.0" -o "${fzf_version}" '>' "0.53.0" ]; then
-        FZFCMD="fzf --tmux 80%"
-    else
+    if test "${fzf_version}" '<' "0.53.0" || test "${fzf_version}" = "0.61.2"; then
+        # fzf versions before 0.53.0 do not support the tmux integration
+        # version 0.61.2 has a bug that prevents it from working
         FZFCMD="sh fzf-tmux.sh"
+    else
+        FZFCMD="fzf --tmux 80%"
     fi
 
     if [ -z "${TAB}" ]; then
