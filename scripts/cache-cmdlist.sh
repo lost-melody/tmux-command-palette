@@ -112,4 +112,17 @@ shell_cmd() {
     fi
 }
 
+send_cmd() {
+    local cmd=""
+    local icon=""
+    local note=""
+    local flags=""
+    parse_cmdargs "$@" || return 1
+
+    if [ -n "${cmd}" ]; then
+        tmux_cmd --icon "${icon}" --note "${note}" -- \
+            send-keys ${flags} "${cmd}"
+    fi
+}
+
 main "$@"

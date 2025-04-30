@@ -5,9 +5,11 @@ main() {
     local scripts="${PWD}"
     local plugins="$(dirname "$(dirname "${scripts}")")"
 
-    local sed_env="s/^([^=]+)=/\1\t/"
-    popup_cmd --icon "󰺮 " --note "Browse environment variables" --flags "-E" -- \
-        sh -c "env | sed -E '${sed_env}' | fzf"
+    send_cmd --icon "󰺮 " --note "Browse environment variables" --flags "-l" -- \
+        sh -c "printenv | sort | column -s = -l 2 -t | fzf"
+    tmux_cmd --icon "󰺮 " --note "Browse environment variables (alt)" -- \
+        send-keys -l "printenv | sort | column -s = -l 2 -t | fzf" ";" \
+        send-keys "Enter"
     tmux_cmd --icon "󰑕 " --note "Rename session" -- \
         command-prompt -p "session name:" "rename-session %1"
     shell_cmd --icon "󰈹 " --note "Launch firefox" -- \
