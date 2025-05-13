@@ -3,6 +3,7 @@
 cd "$(dirname "$0")"
 
 PREVIEW="preview-cmd.sh"
+RENDER="render.sh"
 CACHECMD="cache-cmdlist.sh"
 
 main() {
@@ -36,7 +37,7 @@ fuzzy_search() {
     local cmd_id="$(
         ${FZFCMD} \
             -d "${SEP}" --with-nth 2 \
-            --preview "echo {} | sh ${PREVIEW} ${list}" \
+            --preview "echo {} | sh ${PREVIEW} ${list} | sh ${RENDER}" \
             --preview-window wrap |
             sed -E "s/^(:[0-9]+:)\s+.*$/\1/"
     )"

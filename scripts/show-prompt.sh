@@ -3,6 +3,7 @@
 cd "$(dirname "$0")"
 
 PREVIEW="preview-key.sh"
+RENDER="render.sh"
 SEDKEYBIND="sed-keybind.sh"
 
 main() {
@@ -37,7 +38,7 @@ fuzzy_search() {
     local table="$1"
     # fuzzy search for a line and print the key
     ${FZFCMD} \
-        --preview "echo {} | sh ${PREVIEW} ${table}" \
+        --preview "echo {} | sh ${PREVIEW} ${table} | sh ${RENDER}" \
         --preview-window wrap |
         sed -E 's/^(\S+)\s+.*$/\1/'
 }

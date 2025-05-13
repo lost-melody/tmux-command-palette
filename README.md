@@ -37,9 +37,11 @@ Requirements:
 
 - Install [tpm](https://github.com/tmux-plugins/tpm).
 - Add this plugin to the list of TPM plugins in `~/.tmux.conf`:
+
   ```tmux
   set -g @plugin 'lost-melody/tmux-command-palette'
   ```
+
 - Press `prefix` then `I` (in tmux) to install it.
 
 ### Manually
@@ -51,6 +53,16 @@ run-shell $PATH_TO_CMDPALETTE/init.tmux
 ```
 
 ## Configuration
+
+### Custom Render Command
+
+By default, `mdcat` is used to render preview contents. If it is not installed, `cat` is used instead.
+
+Custom render command can be used via:
+
+```tmux
+set -g @cmdpalette-render-cmd 'bat -l md -f -pp'
+```
 
 ### Keybindings Table
 

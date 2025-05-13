@@ -24,15 +24,21 @@ main() {
             sed -E 's/^(\S+)\s+(\S+)\s+(.*)$/\3/'
     )"
 
-    echo "[${table} \"${key}\"]"
     if [ -n "${note}" ]; then
+        echo '# Note'
         echo
-        echo '[Note]'
-        echo "${note}"
+        echo "> ${note}"
+        echo
     fi
+    echo '# Keys'
     echo
-    echo '[Bind]'
+    echo "- \`${table}\`, \`${key}\`"
+    echo
+    echo '# Bind'
+    echo
+    echo '```tmux'
     echo "${bind}"
+    echo '```'
 }
 
 main "$@"

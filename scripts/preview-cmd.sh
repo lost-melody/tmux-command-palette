@@ -21,13 +21,19 @@ main() {
     local note="$(head -n 2 "${cmddef}" | tail -n 1)"
     local cmd="$(tail -n 1 "${cmddef}")"
 
-    echo "[cmdlist \"${list}\"]"
+    echo "# Note"
     echo
-    echo "[Note]"
-    echo "${icon}${TAB}${note}"
+    echo "> ${icon}${TAB}${note}"
     echo
-    echo "[Command]"
+    echo '# Source'
+    echo
+    echo "- from list \`${list}\`"
+    echo
+    echo '# Command'
+    echo
+    echo '```sh'
     eval echo "${cmd}"
+    echo '```'
 
     rm -rf "${cmddef}"
 }
