@@ -79,7 +79,7 @@ tmux_cmd() {
     parse_cmdargs "$@" || return 1
 
     if [ -n "${cmd}" ]; then
-        let CMD_ID++
+        CMD_ID=$((CMD_ID+1))
         echo "COMMAND:${CMD_ID}:"
         echo "  NOTE:${CMD_ID}: ${icon:-">_"}${TAB}${note:-"$(eval echo "${cmd}")"}"
         echo "  BIND:${CMD_ID}: ${cmd}"
