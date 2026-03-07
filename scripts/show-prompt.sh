@@ -23,14 +23,17 @@ source_file() {
 
 list_keys() {
     local table="$1"
+    local noted_only="$(tmux show-options -gqv @cmdpalette-noted-only)"
     if [ -n "${table}" ]; then
         # list key bindings with notes
         tmux list-keys -NT "${table}" |
             sed -E 's/^(\S+)\s+/\1\t/'
         # list key bindings as valid config
-        tmux list-keys -T "${table}" |
-            sh "${SEDKEYBIND}" |
-            sed -E 's/^(\S+)\s+(\S+)\s+(.*)$/\2\t\3/'
+        if [ "${noted_only}" != "on" ]; then
+            tmux list-keys -T "${table}" |
+                sh "${SEDKEYBIND}" |
+                sed -E 's/^(\S+)\s+(\S+)\s+(.*)$/\2\t\3/'
+        fi
     fi
 }
 

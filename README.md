@@ -84,6 +84,16 @@ set -g @cmdpalette-key-root 'prefix BSpace'
 set -g @cmdpalette-key-copy-mode-vi 'copy-mode-vi C-/'
 ```
 
+### Noted-Only Mode
+
+By default, the keybinding palette shows all key bindings, including raw unannotated ones. To only show bindings that have a human-readable note (registered with `bind-key -N`), set:
+
+```tmux
+set -g @cmdpalette-noted-only on
+```
+
+This filters out noisy raw bindings from plugins and tmux internals, keeping the palette clean and readable.
+
 ### Custom Command List
 
 Command list is a shell script that is sourced by the palette entry file, where we register a series of tmux commands.
