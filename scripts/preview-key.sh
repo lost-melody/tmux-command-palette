@@ -7,7 +7,7 @@ SEDKEYBIND="sed-keybind.sh"
 main() {
     local table="$1"
 
-    local key="$(head -n 1 | sed -E 's/^(\S+)\s+.*$/\1/')"
+    local key="$(head -n 1 | sed -E 's/^([^[:space:]]+)[[:space:]]+.*$/\1/')"
     # escaped semicolon
     local k="${key}"
     if [ "${k}" = ";" ]; then
@@ -16,12 +16,12 @@ main() {
 
     local note="$(
         tmux list-keys -NT "${table}" "${k}" 2>/dev/null |
-            sed -E 's/^\S+\s+//'
+            sed -E 's/^[^[:space:]]+[[:space:]]+//'
     )"
     local bind="$(
         tmux list-keys -T "${table}" "${k}" 2>/dev/null |
             sh "${SEDKEYBIND}" |
-            sed -E 's/^(\S+)\s+(\S+)\s+(.*)$/\3/'
+            sed -E 's/^([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+(.*)$/\3/'
     )"
 
     if [ -n "${note}" ]; then

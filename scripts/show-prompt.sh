@@ -26,11 +26,11 @@ list_keys() {
     if [ -n "${table}" ]; then
         # list key bindings with notes
         tmux list-keys -NT "${table}" |
-            sed -E 's/^(\S+)\s+/\1\t/'
+            sed -E 's/^([^[:space:]]+)[[:space:]]+/\1\t/'
         # list key bindings as valid config
         tmux list-keys -T "${table}" |
             sh "${SEDKEYBIND}" |
-            sed -E 's/^(\S+)\s+(\S+)\s+(.*)$/\2\t\3/'
+            sed -E 's/^([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+(.*)$/\2\t\3/'
     fi
 }
 
@@ -40,7 +40,7 @@ fuzzy_search() {
     ${FZFCMD} \
         --preview "echo {} | sh ${PREVIEW} ${table} | sh ${RENDER}" \
         --preview-window wrap |
-        sed -E 's/^(\S+)\s+.*$/\1/'
+        sed -E 's/^([^[:space:]]+)[[:space:]]+.*$/\1/'
 }
 
 execute_key() {
@@ -53,18 +53,15 @@ execute_key() {
 
         local tmux_version="$(tmux -V)"
         if [ "${tmux_version}" = "3.4" -o "${tmux_version}" '>' "3.4" ]; then
-            # tmux (>=3.4) supports "send-keys -K"
             tmux switch-client -T "${table}"
             tmux send-keys -K "${key}"
             return
         fi
 
-        # tmux (<3.4) does not support "send-keys -K", execute commands instead
-        # note: some commands (e.g. new-session) will not work
         local command="$(
             tmux list-keys -T "${table}" "${key}" |
                 sh "${SEDKEYBIND}" |
-                sed -E 's/^\S+\s+\S+\s+//'
+                sed -E 's/^[^[:space:]]+[[:space:]]+[^[:space:]]+[[:space:]]+//'
         )"
         if [ -n "${command}" ]; then
             eval tmux ${command}

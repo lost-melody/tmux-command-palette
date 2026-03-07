@@ -27,7 +27,7 @@ source_file() {
 list_commands() {
     local list="$1"
     local cachefile="${CACHEDIR}/${list}.txt"
-    grep "^  NOTE:" "${cachefile}" | sed -E "s/^\s+NOTE(:[0-9]+:)\s+/\1${SEP}/"
+    grep "^  NOTE:" "${cachefile}" | sed -E "s/^[[:space:]]+NOTE(:[0-9]+:)[[:space:]]+/\1${SEP}/"
 }
 
 fuzzy_search() {
@@ -39,14 +39,14 @@ fuzzy_search() {
             -d "${SEP}" --with-nth 2 \
             --preview "echo {} | sh ${PREVIEW} ${list} | sh ${RENDER}" \
             --preview-window wrap |
-            sed -E "s/^(:[0-9]+:)\s+.*$/\1/"
+            sed -E "s/^(:[0-9]+:)[[:space:]]+.*$/\1/"
     )"
 
     if [ -n "${cmd_id}" ]; then
         # query that command from the command cache
         local cachefile="${CACHEDIR}/${list}.txt"
         grep "^  BIND${cmd_id}" "${cachefile}" |
-            sed -E "s/^\s+BIND:[0-9]+:\s+//"
+            sed -E "s/^[[:space:]]+BIND:[0-9]+:[[:space:]]+//"
     fi
 }
 

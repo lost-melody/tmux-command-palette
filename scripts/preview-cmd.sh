@@ -7,13 +7,13 @@ main() {
 
     local list="$1"
     local cachefile="${CACHEDIR}/${list}.txt"
-    local cmd_id="$(sed -E "s/^(:[0-9]+:)\s+.*$/\1/")"
+    local cmd_id="$(sed -E "s/^(:[0-9]+:)[[:space:]]+.*$/\1/")"
     local cmddef="$(mktemp "${CACHEDIR}/XXX.txt")"
 
     grep -A 2 "^COMMAND${cmd_id}" "${cachefile}" |
         sed -E -n \
-            -e "s/^\s+NOTE:[0-9]+:\s+(\S+)\s+(.*)$/\1\n\2/" \
-            -e "s/^\s+BIND:[0-9]+:\s+//" \
+            -e "s/^[[:space:]]+NOTE:[0-9]+:[[:space:]]+([^[:space:]]+)[[:space:]]+(.*)$/\1\n\2/" \
+            -e "s/^[[:space:]]+BIND:[0-9]+:[[:space:]]+//" \
             -e 2p -e 3p \
             >"${cmddef}"
 
