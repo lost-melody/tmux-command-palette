@@ -3,16 +3,13 @@
 
 CURRENT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SCRIPTS="${CURRENT_DIR}/scripts"
-SEDKEYBIND="${SCRIPTS}/sed-keybind.sh"
 KEYPALETTE="${SCRIPTS}/show-prompt.sh"
 CMDPALETTE="${SCRIPTS}/show-cmdlist.sh"
 
 main() {
-    source_file "${SCRIPTS}/env.sh" -c
-
     local TABLES="$(tmux show-options -gqv @cmdpalette-tables | sed 's/,/ /g')"
     if [ -z "${TABLES}" ]; then
-        TABLES="$(all_tables)"
+        TABLES="root prefix copy-mode copy-mode-vi"
     fi
     for table in $TABLES; do
         bind_keytable "${table}"
@@ -27,16 +24,6 @@ main() {
     done
 }
 
-source_file() {
-    . "$@"
-}
-
-all_tables() {
-    tmux list-keys |
-        sh "${SEDKEYBIND}" |
-        sed -E 's/^(\S+)\s+(\S+)\s+(.*)$/\1/' |
-        sort -u
-}
 
 parse_binding() {
     if [ $# -eq 1 ]; then
